@@ -14,7 +14,10 @@ const MenuLayout: React.FC<MenuLayoutProps> = ({ setDensite, setLevel }) => {
 
         for (let i = 0; i < radio.length; i++) {
             if ((radio[i] as HTMLInputElement).checked) {
-                setLevel((radio[i] as HTMLInputElement).attributes.id.value);
+                const idAttribute = (radio[i] as HTMLInputElement).getAttribute('id');
+                if (idAttribute !== null) {
+                    setLevel(idAttribute);
+                }
                 setDensite(parseFloat(selectedLevel));
             }
         }
