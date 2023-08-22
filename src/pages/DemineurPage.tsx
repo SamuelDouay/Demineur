@@ -18,7 +18,7 @@ const DemineurPage = () => {
         } else {
             setRender(<GameLayout densite={densite} setDensite={setDensite} handleEndGame={handleEndGame} />);
         }
-    }, [densite]);
+    }, [densite, resultat, level, time]);
 
     const handleEndGame = (endTime: string, gameResult: string) => {
         setResultat(gameResult);

@@ -17,7 +17,7 @@ const Timer: React.FC<TimerProps> = ({ nombreBombe, time, setTime }) => {
 
     return (
         <div className="py-3 px-2 rounded-lg border border-gray-200 w-1/3">
-            <span className="bg-black py-2 px-3 rounded-full text-center text-white mr-5">{nombreBombe}</span>
+            <span className="bg-black py-2 px-3 rounded-full text-center text-white mr-4">{nombreBombe}</span>
             {minutes.toString().padStart(2, "0")}:{seconds.toString().padStart(2, "0")}
         </div>
     );

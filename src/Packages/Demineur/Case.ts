@@ -7,7 +7,7 @@ export class Case {
     constructor(bomb: boolean) {
         this.bomb = bomb;
         this.show = false;
-        this.nbBombVoisin = -1;
+        this.nbBombVoisin = -2;
         this.modeBomb = true;
     }
 
@@ -21,6 +21,10 @@ export class Case {
 
     get isBomb(): boolean {
         return this.bomb;
+    }
+
+    set setBomb(bomb: boolean) {
+        this.bomb = bomb;
     }
 
     get getNbBombVoisin(): number {

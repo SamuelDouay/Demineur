@@ -4,30 +4,54 @@ export class Plateau {
     private readonly width: number;
     private readonly height: number;
     private readonly plateau: Case[][];
-    private readonly densite: number;
     private nbCaseSafe: number;
+    private nbBombes: number;
 
     constructor(width: number, height: number, densite: number) {
         this.width = width;
         this.height = height;
         this.plateau = [];
-        this.densite = densite;
         this.nbCaseSafe = 0;
+        this.nbBombes = this.getRandomNbBombe(densite, height * width);
+        this.initTab();
     }
 
-    public initPlateau(): void {
-        this.nbCaseSafe = 0;
+    private getRandomNbBombe(densite: number, max: number) {
+        //let res = 0;
+        for (let i = 0; i < max; i++) {
+            if (Math.random() < densite) {
+                //res++;
+            }
+        }
+        const moyen = densite * 100;
+        return Math.floor(Math.random() * (moyen + 5) + moyen);
+        //return res;
+    }
+
+
+    private initTab(): void {
         for (let l = 0; l < this.width; l++) {
             this.plateau[l] = [];
             for (let c = 0; c < this.height; c++) {
-                if (Math.random() < this.densite) {
-                    this.plateau[l][c] = new Case(true);
-                } else {
-                    this.nbCaseSafe++;
-                    this.plateau[l][c] = new Case(false);
-                }
+                this.plateau[l][c] = new Case(false);
             }
         }
+    }
+
+    public initPlateau(width: number, height: number): void {
+        let bombesPlacees = 0;
+        while (bombesPlacees < this.nbBombes) {
+            const l = Math.floor(Math.random() * this.width);
+            const c = Math.floor(Math.random() * this.height);
+
+            if (!this.plateau[l][c].isBomb && (l !== width && c !== height)) {
+                this.plateau[l][c].setBomb = true;
+                this.plateau[l][c].setNbBombVoisin = -1;
+                bombesPlacees++;
+            }
+        }
+
+        this.nbCaseSafe = this.width * this.height - this.nbBombes;
         this.calculNbBomb();
     }
 
@@ -61,8 +85,9 @@ export class Plateau {
         const currentCase = this.plateau[l][c];
         if (modeBomb) {
             this.showCaseModeBomb(l, c);
+        } else {
+            currentCase.setModeBombe = !currentCase.getModeBomb;
         }
-        currentCase.setModeBombe = modeBomb;
     }
 
     private showCaseModeBomb(l: number, c: number): void {
@@ -72,7 +97,6 @@ export class Plateau {
         const currentCase = this.plateau[l][c];
 
         if (currentCase.isBomb) {
-            this.showBomb();
             this.nbCaseSafe = -1;
             return;
         }
@@ -93,11 +117,12 @@ export class Plateau {
         }
     }
 
-    private showBomb(): void {
+    public showBomb(modeBomb: boolean): void {
         for (let l = 0; l < this.width; l++) {
             for (let c = 0; c < this.height; c++) {
                 if (this.plateau[l][c].isBomb) {
                     this.plateau[l][c].setShow = true;
+                    this.plateau[l][c].setModeBombe = modeBomb;
                 }
             }
         }
@@ -117,6 +142,10 @@ export class Plateau {
 
     public get getNbCaseSafe(): number {
         return this.nbCaseSafe;
+    }
+
+    public get getNbBombes(): number {
+        return this.nbBombes;
     }
 }
 

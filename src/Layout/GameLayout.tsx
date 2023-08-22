@@ -2,6 +2,7 @@ import GameView from "../Componant/Game/GameView";
 import ModeComponant from "../Componant/Game/ModeComponant";
 import React, { useState } from "react";
 import Timer from "../Componant/Game/Timer";
+import { Demineur } from "../Controller/Demineur";
 
 
 interface GameLayoutProps {
@@ -15,19 +16,17 @@ const GameLayout: React.FC<GameLayoutProps> = ({ densite, setDensite, handleEndG
     const [selectedMode, setSelectedMode] = useState(0);
     const [nombreBombe, setNombreBombe] = useState(0);
     const [time, setTime] = useState(0);
-
-    const changeMode = () => {
-        return selectedMode === 0;
-    }
-
-    const recupNombreCaseSafe = (nbCaseSafe: number) => {
-        setNombreBombe(100 - nbCaseSafe);
-    }
-
+    const [game] = useState<Demineur>(() => {
+        const game = new Demineur(10, 10, densite);
+        setNombreBombe(game.getPlateau.getNbBombes);
+        return game;
+    });
+    
     const isEndGame = (resultat: number) => {
         const minutes = Math.floor((time % 360000) / 6000);
         const seconds = Math.floor((time % 6000) / 100);
         const finaletime = minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0");
+        
         if (resultat === 0) {
             handleEndGame(finaletime, 'Gagné');
             return;
@@ -49,7 +48,7 @@ const GameLayout: React.FC<GameLayoutProps> = ({ densite, setDensite, handleEndG
                 <Timer nombreBombe={nombreBombe} time={time} setTime={setTime} />
                 <ModeComponant selectedMode={selectedMode} setSelectedMode={setSelectedMode} />
             </div>
-            <GameView height={10} width={10} densite={densite} handleMode={changeMode} recupNombreCaseSafe={recupNombreCaseSafe} isEndGame={isEndGame} />
+            <GameView game={game} selectedMode={selectedMode} setNombreBombe={setNombreBombe} isEndGame={isEndGame} />
         </div>
     );
 }
